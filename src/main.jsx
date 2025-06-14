@@ -20,9 +20,12 @@ if (!PUBLISHABLE_KEY) {
 
 const router = createBrowserRouter([
   {
-    path: "/",
     element: <MainLayout />,
     children: [
+      {
+        path: "/",
+        element: <Homepage />,
+      },
       {
         path: "/posts",
         element: <PostListpage />,

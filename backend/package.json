@@ -11,7 +11,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "express": "^5.1.0",
-    "mongoose": "^8.15.2"
+    "mongoose": "^8.15.2",
+    "svix": "^1.67.0"
   }
 }

@@ -5,9 +5,11 @@ import commentRouter from "./routes/comment.route.js";
 import webHookRouter from "./routes/webhook.route.js";
 import connectDB from "./lib/connectDB.js";
 import { clerkMiddleware } from "@clerk/express";
+import cors from "cors";
 
 const app = express();
 app.use(clerkMiddleware());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use("/webhooks", webHookRouter);
 app.use(express.json());
 

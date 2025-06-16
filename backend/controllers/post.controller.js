@@ -2,7 +2,7 @@ import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 
 export const getPosts = async (req, res) => {
-  const posts = await Post.find1();
+  const posts = await Post.find();
   res.status(200).send(posts);
 };
 
@@ -12,6 +12,7 @@ export const getPost = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
+  console.log("inside create");
   const clerkUserId = req.auth.userId;
   if (!clerkUserId) {
     return res.status(401).json("Not Authenticated");
@@ -24,9 +25,21 @@ export const createPost = async (req, res) => {
   if (!user) {
     return res.status(404).json("User not found");
   }
-  const newPost = new Post({ user: user._id, ...req.body });
+
+  let slug = req.body.title.replace(/ /g, "-").toLowerCase();
+
+  let postExists = await Post.findOne({ slug });
+
+  let counter = 2;
+
+  while (postExists) {
+    slug = `${slug}-${counter}`;
+    postExists = await Post.findOne({ slug });
+    counter++;
+  }
+  const newPost = new Post({ user: user._id, ...req.body, slug });
   const post = newPost.save();
-  res.status(200).json(post);
+  res.status(200).json({ status: "success" });
 };
 
 export const deletePost = async (req, res) => {

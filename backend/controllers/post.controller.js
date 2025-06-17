@@ -39,8 +39,8 @@ export const createPost = async (req, res) => {
     counter++;
   }
   const newPost = new Post({ user: user._id, ...req.body, slug });
-  const post = newPost.save();
-  res.status(200).json({ status: "success" });
+  const post = await newPost.save();
+  res.status(200).json({ status: "success", data: post });
 };
 
 export const deletePost = async (req, res) => {

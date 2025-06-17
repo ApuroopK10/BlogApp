@@ -79,7 +79,7 @@ const Write = () => {
             className="bg-gray-100 rounded-2xl p-2 text-gray-700 shadow-md w-max"
           >
             Add a cover image
-          </button>{" "}
+          </button>
         </Upload>
         {progress && progress > 0 && progress !== "0" && (
           <>

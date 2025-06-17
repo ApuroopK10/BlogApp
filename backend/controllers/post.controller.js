@@ -3,8 +3,15 @@ import User from "../models/user.model.js";
 import ImageKit from "imagekit";
 
 export const getPosts = async (req, res) => {
-  const posts = await Post.find();
-  res.status(200).send(posts);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 2;
+  const posts = await Post.find()
+    .populate("user", "username")
+    .limit(limit)
+    .skip((page - 1) * limit);
+  const totalPosts = await Post.countDocuments();
+  const hasMore = totalPosts - page * limit > 0;
+  res.status(200).send({ posts, hasMore });
 };
 
 export const getPost = async (req, res) => {

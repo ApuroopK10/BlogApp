@@ -1,5 +1,5 @@
 import { useAuth, useUser } from "@clerk/clerk-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "react-quill-new/dist/quill.snow.css";
 import ReactQuill from "react-quill-new";
 import { useMutation } from "@tanstack/react-query";
@@ -13,7 +13,9 @@ const Write = () => {
   const { getToken } = useAuth();
   const [value, setValue] = useState("");
   const [cover, setCover] = useState("");
-  const [progress, setProgress] = useState(0);
+  const [img, setImg] = useState("");
+  const [video, setVideo] = useState("");
+  const [progress, setProgress] = useState(null);
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -31,10 +33,23 @@ const Write = () => {
     },
   });
 
+  useEffect(() => {
+    img && setValue((prev) => prev + `<p><image src="${img.url}" /></p>`);
+  }, [img]);
+
+  useEffect(() => {
+    video &&
+      setValue(
+        (prev) =>
+          prev + `<p><iframe className="ql-video" src="${video.url}" /></p>`
+      );
+  }, [video]);
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {
+      img: cover.filePath || "",
       title: formData.get("title"),
       category: formData.get("category"),
       desc: formData.get("desc"),
@@ -66,7 +81,11 @@ const Write = () => {
             Add a cover image
           </button>{" "}
         </Upload>
-        Upload progress: <progress value={progress} max={100}></progress>
+        {progress && progress > 0 && progress !== "0" && (
+          <>
+            Upload progress: <progress value={progress} max={100}></progress>
+          </>
+        )}
         <input
           type="text"
           placeholder="My Awesome Story"
@@ -97,8 +116,12 @@ const Write = () => {
         ></textarea>
         <div className="flex">
           <div className="d-flex flex-col gap-2 mr-2">
-            <div className="cursor-pointer">📷</div>
-            <div className="cursor-pointer">▶️</div>
+            <Upload type="image" setData={setImg} setProgress={setProgress}>
+              📷
+            </Upload>
+            <Upload type="video" setData={setVideo} setProgress={setProgress}>
+              ▶️
+            </Upload>
           </div>
           <ReactQuill
             theme="snow"

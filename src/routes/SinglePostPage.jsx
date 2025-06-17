@@ -1,36 +1,52 @@
 import React from "react";
 import ImageViewer from "../components/ImageViewer";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { getRelativeDaysAgo } from "../utils/helpers";
+
+const fetchPost = async (slug) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_URL}/posts/${slug}`
+  );
+  return response.data;
+};
 
 const SinglePostPage = () => {
+  const { slug } = useParams();
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["post", slug],
+    queryFn: () => fetchPost(slug),
+  });
+  console.log(data);
+  if (isPending) return "Loading...";
+  if (isError) return "Something went wrong..." + error.message;
+  if (!data) return "No posts found";
   return (
     <div className="flex flex-col gap-12">
       {/* detail */}
       <div className="flex gap-8">
         <div className="lg:w-3/5 flex flex-col gap-8">
           <h1 className="text-xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            {data?.title}
           </h1>
           <div className="flex items-center gap-2 text-gra-400 text-sm">
             <span>Written by</span>
-            <Link className="text-blue-800">John Doe</Link>
+            <Link className="text-blue-800">{data?.user.username}</Link>
             <span>on</span>
-            <Link className="text-blue-800">Web design</Link>
-            <span>2 days ago</span>
+            <Link className="text-blue-800">{data.category}</Link>
+            <span>{getRelativeDaysAgo(data?.createdAt)}</span>
           </div>
-          <p className="text-gray-500 font-medium">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aperiam
-            repellat hic amet quos pariatur laboriosam quam impedit ipsum
-            sapiente eaque magnam nemo, commodi enim sed neque dolorum
-            consectetur perspiciatis nam.
-          </p>
+          <p className="text-gray-500 font-medium">{data?.desc}</p>
         </div>
-        <div className="hidden lg:block w-2/5">
-          <ImageViewer src="/postImg.jpeg" w={600} className="rounded-2xl" />
-        </div>
+        {data.user.img && (
+          <div className="hidden lg:block w-2/5">
+            <ImageViewer src={data.user.img} w={600} className="rounded-2xl" />
+          </div>
+        )}
       </div>
       {/* Content */}
       <div className="flex flex-col md:flex-row gap-8">
@@ -130,13 +146,15 @@ const SinglePostPage = () => {
           <h1 className="mb-4 font-medium">Author</h1>
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-8">
-              <ImageViewer
-                src="userImg.jpeg"
-                className="w-12 h-12 rounded-full object-cover"
-                w="48"
-                h="48"
-              />
-              <Link className="text-blue-800">John Doe</Link>
+              {data.user.img && (
+                <ImageViewer
+                  src={data.user.img}
+                  className="w-12 h-12 rounded-full object-cover"
+                  w="48"
+                  h="48"
+                />
+              )}
+              <Link className="text-blue-800">{data.user.username}</Link>
             </div>
 
             <p className="text-sm text-gray-500">

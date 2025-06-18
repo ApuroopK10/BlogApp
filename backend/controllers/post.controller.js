@@ -23,7 +23,6 @@ export const getPost = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  console.log("inside create");
   const clerkUserId = req.auth.userId;
   if (!clerkUserId) {
     return res.status(401).json("Not Authenticated");

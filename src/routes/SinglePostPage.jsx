@@ -21,7 +21,6 @@ const SinglePostPage = () => {
     queryKey: ["post", slug],
     queryFn: () => fetchPost(slug),
   });
-  console.log(data);
   if (isPending) return "Loading...";
   if (isError) return "Something went wrong..." + error.message;
   if (!data) return "No posts found";
@@ -52,94 +51,7 @@ const SinglePostPage = () => {
       <div className="flex flex-col md:flex-row gap-8">
         {/* text */}
         <div className="lg:text-lg flex flex-col gap-6 text-justify">
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis
-            molestias ex ducimus, porro illum debitis nemo incidunt quae
-            provident omnis similique fugiat voluptates eos maxime minus
-            eligendi fugit saepe possimus!Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. ImpeditLorem, ipsum dolor sit amet consectetur
-            adipisicing elit. Corporis molestias ex ducimus, porro illum debitis
-            nemo incidunt quae provident omnis similique fugiat voluptates eos
-            maxime minus eligendi fugit saepe possimus!Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Impedit
-          </p>
+          <p>{data?.content}</p>
         </div>
         {/* menu */}
         <div className="px-4 h-max sticky top-8">
@@ -169,7 +81,7 @@ const SinglePostPage = () => {
               </Link>
             </div>
           </div>
-          <PostMenuActions />
+          <PostMenuActions post={data} />
           <h1 className="mt-8 mb-4 font-medium">Categories</h1>
           <div className="flex flex-col gap-2 text-sm">
             <Link className="underline" to="/">

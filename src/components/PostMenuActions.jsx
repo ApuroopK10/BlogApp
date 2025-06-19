@@ -1,5 +1,5 @@
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ const PostMenuActions = ({ post }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     isPending,
     isError,
@@ -44,6 +45,37 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return axios.patch(
+        `${import.meta.env.VITE_API_URL}/users/save`,
+        {
+          postId: post._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    },
+    onSuccess: (res) => {
+      toast.success(res.data);
+      queryClient.invalidateQueries({ queryKey: ["savedPosts"] });
+    },
+    onError: (error) => {
+      toast.error(error.response.data);
+    },
+  });
+
+  const toggleSave = () => {
+    if (!user) {
+      navigate("/");
+    }
+    saveMutation.mutate();
+  };
+
   const isSaved =
     savedPosts?.data?.posts?.some((savedPost) => savedPost === post._id) ||
     false;
@@ -55,7 +87,10 @@ const PostMenuActions = ({ post }) => {
       ) : error ? (
         "Saved Post fetching failed"
       ) : (
-        <div className="flex items-center gap-2 py-2 text-sm cursor-pointer">
+        <div
+          className="flex items-center gap-2 py-2 text-sm cursor-pointer"
+          onClick={toggleSave}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
@@ -70,6 +105,9 @@ const PostMenuActions = ({ post }) => {
             />
           </svg>
           <span>{isSaved ? "Unsave" : "Save"} this Post</span>
+          {saveMutation.isPending && (
+            <span className="text-xs">in progress</span>
+          )}
         </div>
       )}
       {user && user.username === post.user.username && (

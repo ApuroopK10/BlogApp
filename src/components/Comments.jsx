@@ -50,7 +50,6 @@ const Comments = ({ postId }) => {
     const formData = new FormData(e.target);
     mutation.mutate({ desc: formData.get("desc") });
   };
-  console.log("comments", data);
   return (
     <div className="flex flex-col gap-8 lg:w-3/5 mb-8">
       <h1 className="underline text-gray-500 text-xl">Comments</h1>

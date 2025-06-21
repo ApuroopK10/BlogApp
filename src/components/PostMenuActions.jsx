@@ -27,6 +27,8 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
+  const isAdmin = user?.publicMetadata?.role === "admin" || false;
+
   const mutation = useMutation({
     mutationFn: async () => {
       const token = await getToken();
@@ -110,7 +112,7 @@ const PostMenuActions = ({ post }) => {
           )}
         </div>
       )}
-      {user && user.username === post.user.username && (
+      {user && (user.username === post.user.username || isAdmin) && (
         <div
           className="flex items-center gap-2 py-2 text-sm cursor-pointer"
           onClick={() => mutation.mutate()}

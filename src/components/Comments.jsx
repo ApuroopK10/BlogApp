@@ -72,16 +72,16 @@ const Comments = ({ postId }) => {
         "Error loading comments.."
       ) : (
         <>
-          {" "}
           {mutation.isPending && (
             <Comment
               desc={`${mutation.variables.desc} (Sending...)`}
               createdAt={new Date()}
               user={{ img: user.img, username: user.username }}
+              postId={postId}
             />
           )}{" "}
           {data.map((comment) => (
-            <Comment key={comment._id} {...comment} />
+            <Comment key={comment._id} {...comment} postId={postId} />
           ))}
         </>
       )}

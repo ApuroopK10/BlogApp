@@ -29,11 +29,14 @@ const PostListItem = ({
         </Link>
         <div className="flex items-center gap-2 text-gray-400 text-sm">
           <span>Written by</span>
-          <Link to="" className="text-blue-800">
+          <Link
+            to={`/posts?author=${user?.username}`}
+            className="text-blue-800"
+          >
             {user?.username}
           </Link>
           <span>On</span>
-          <Link to="" className="text-blue-800">
+          <Link to={`/posts?cat=${category}`} className="text-blue-800">
             {category}
           </Link>
           <span>{getRelativeDaysAgo(createdAt)}</span>
